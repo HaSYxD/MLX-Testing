@@ -9,7 +9,8 @@
 # include "mlx.h"
 
 # define PI	3.13149265359
-
+# define WIN_WIDTH	1600
+# define WIN_HEIGHT	900
 typedef struct	s_point
 {
 	int	x;

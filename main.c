@@ -1,48 +1,56 @@
 #include "fdf.h"
+#include "matrices.h"
 #include "draw_line.h"
 
 void	draw_background(t_data *data)
 {
-	for (int j = 0; j < 1080; j++)
-		for (int i = 0; i < 1920; i++)
+	for (int j = 0; j < WIN_HEIGHT; j++)
+		for (int i = 0; i < WIN_WIDTH; i++)
 			put_pixel_to_image(&data->img, i, j, 0x00000000);
 }
 
 int	handle_no_event(t_data *data)
 {
-	int	x;
-	int	y;
-	int	x1;
-	int	y1;
-	
-	t_point	pnt[8];
-	int	n = 0;
-	for (int k = 0; k < 2; k++)
-	{
-		for (int j = 4; j < 6; j++)
-		{
-			for (int i = 8; i < 10; i++)
-			{
-				pnt[n].x = i * 150;
-				pnt[n].z = j * 150;
-				pnt[n].y = k * 150;
-				n++;
-			}
-		}
-	}
-	float t = 0.1;
+	int	angle = data->p;
+	t_vect2D	sc;
+	t_vect3D	pnt[4];
+	t_vect3D	proj_matrix[2] = {
+		(t_vect3D){1, 0, 0},
+		(t_vect3D){0, 1, 0}
+	};
+	t_vect3D	rot_matrixZ[2] = {
+		(t_vect3D){cos(angle), -sin(angle), 0},
+		(t_vect3D){sin(angle), cos(angle), 0}
+	};
+	t_vect3D	rot_matrixY[2] = {
+		(t_vect3D){cos(angle), 0, -sin(angle)},
+		(t_vect3D){0, 1, 0}
+	};
+	pnt[0] = (t_vect3D){605, 105, 10};
+	pnt[1] = (t_vect3D){655, 105, 10};
+	pnt[2] = (t_vect3D){655, 155, 10};
+	pnt[3] = (t_vect3D){605, 155, 10};
 	draw_background(data);
-	for (int i = 0; i < 8; i++)
+
+	for (int i = 0; i < 4; i++)
+	{
+		sc = matrix_mul2D(pnt[i], proj_matrix);
+		sc = matrix_mul2D((t_vect3D){sc.x, sc.y, 0}, rot_matrixZ);
+		sc = matrix_mul2D((t_vect3D){sc.x, sc.y, 0}, rot_matrixY);
+		if (sc.x >= 0 && sc.y >= 0)
+			put_pixel_to_image(&data->img, sc.x, sc.y, 0x00FF0000);
+	}
+	//float t = 0;
+	/*for (int i = 0; i < 8; i++)
 	{
 		x = pnt[i].x * cos(data->p) + pnt[i].y * sin(data->p);
 		y = (pnt[i].x * sin(data->p) + pnt[i].y * cos(data->p)) * sin(t) + pnt[i].z * cos(t);
 		x1 = pnt[i + 1].x * cos(data->p) + pnt[i + 1].y * sin(data->p);
 		y1 = (pnt[i + 1].x * sin(data->p) + pnt[i + 1].y * cos(data->p)) * sin(t) + pnt[i + 1].z * cos(t);
-		 if ((x >= 0 && y >= 0 && x <= 1920 && y <= 1080) && (x1 >= 0 && y1 >= 0 && x1 <= 1920 && y1 <= 1080))
-			draw_line(&data->img, x, y, x1, y1, 0x00FF0000);
-		//put_pixel_to_image(&data->img, x, y, 0x00FF0000);
-	}
-	
+		if ((x >= 0 && y >= 0 && x <= WIN_WIDTH && y <= WIN_HEIGHT) && (x1 >= 0 && y1 >= 0 && x1 <= WIN_WIDTH && y1 <= WIN_HEIGHT))
+			//draw_line(&data->img, x, y, x1, y1, 0x00FF0000);
+			put_pixel_to_image(&data->img, x, y, 0x00FF0000);
+	}*/
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
 	
 	return (0);
@@ -70,56 +78,14 @@ int	main(void)
 	//int	y1;
 	
 	data.mlx_ptr = mlx_init();
-	data.win_ptr = mlx_new_window(data.mlx_ptr, 1920, 1080, "Hello World!");
+	data.win_ptr = mlx_new_window(data.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Hello World!");
 	
-	data.img.mlx_img = mlx_new_image(data.mlx_ptr, 1920, 1080);
+	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp,
 			&data.img.line_len, &data.img.endian);
 	data.p = 0;
-	/*t_point	pnt[81];
-	int	n = 0;
-	for (int j = 3; j < 12; j++)
-	{
-		for (int i = 3; i < 12; i++)
-		{
-			pnt[n].x = i * 50;
-			pnt[n].z = j * 50;
-			pnt[n].y = 0;
-			n++;
-		}
-	}
-	
-	float t = 1;
-	
-	for (int i = 0; i < 81; i++)
-	{
-		x = pnt[i].x * cos(p) + pnt[i].y * sin(p);
-		y = (pnt[i].x * sin(p) + pnt[i].y * cos(p)) * sin(t) + pnt[i].z * cos(t);
-		x1 = pnt[i + 1].x * cos(p) + pnt[i + 1].y * sin(p);
-		y1 = (pnt[i + 1].x * sin(p) + pnt[i + 1].y * cos(p)) * sin(t) + pnt[i + 1].z * cos(t);
-		if (x >= 0 && y >= 0 && x <= 1920 && y <= 1080)
-			draw_line(&data.img, x, y, x1, y1, 0x00FF0000);
-		//put_pixel_to_image(&data.img, x, y, 0x00FF0000);
-	}*/
-	/*
-	for (int j = 0; j < 25; j++)
-	{
-		for (int i = 0; i < 25; i++)
-		{
-			if (i >= 0 && j >= 0)
-			{
-				draw_line(&data.img, i * 25, j * 25, (i + 1) * 25, j * 25, 0x00FF0000);
-				draw_line(&data.img, i * 25, j * 25, i * 25, (j + 1) * 25, 0x00FF0000);
-				draw_line(&data.img, i * 25, (j + 1) * 25, (i + 1) * 25, j * 25, 0x00FF0000);
-			}
-		}
-	}*/
-	
-	
-	//draw_line(&data.img, 5, 5, 150, 200, 0x00FF0000);
-	//draw_line(&data.img, 150, 200, 200, 50, 0x00FF0000);
-	
-	mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.img.mlx_img, 0, 0);
+
+	//mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.img.mlx_img, 0, 0);
 
 	mlx_loop_hook(data.mlx_ptr, &handle_no_event, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_input, &data);
