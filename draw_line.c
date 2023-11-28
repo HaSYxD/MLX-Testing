@@ -15,7 +15,7 @@ static void	first_case(t_img *img, t_vect2D p1, t_vect2D p2, int color)
 	int	i;
 	int	dx;
 	int	dy;
-
+	
 	i = 0;
 	e = abs(p2.x - p1.x);
 	dx = e;
@@ -40,7 +40,7 @@ static void	second_case(t_img *img, t_vect2D p1, t_vect2D p2, int color)
 	int	i;
 	int	dx;
 	int	dy;
-
+	
 	i = 0;
 	e = abs(p2.y - p1.y);
 	dx = 2 * abs(p2.x - p1.x);

@@ -9,9 +9,8 @@ void	draw_background(t_data *data)
 		for (int i = 0; i < WIN_WIDTH; i++)
 			put_pixel_to_image(&data->img, i, j, 0x00000000);
 }
-float	angle = 0;
 t_vect2D	sc[8];
-t_vect3D	pnt[8];
+t_vect3D	vert_buff[8];
 t_matrix3D	proj_matrix = {
 	(t_vect3D){1, 0, 0},
 	(t_vect3D){0, 1, 0},
@@ -20,30 +19,30 @@ t_matrix3D	proj_matrix = {
 
 int	handle_no_event(t_data *data)
 {
-	pnt[0] = (t_vect3D){-1, 1, 1};
-	pnt[1] = (t_vect3D){1, 1, 1};
-	pnt[2] = (t_vect3D){1, -1, 1};
-	pnt[3] = (t_vect3D){-1, -1, 1};
-	pnt[4] = (t_vect3D){-1, 1, -1};
-	pnt[5] = (t_vect3D){1, 1, -1};
-	pnt[6] = (t_vect3D){1, -1, -1};
-	pnt[7] = (t_vect3D){-1, -1, -1};
 	draw_background(data);
-	angle += 0.0025;
 	
+	data->angle.x = 0.785993;
+	data->angle.y = -0.615996;
+	data->angle.z = 0.523997;
+
+	for (int i = 0; i < 8; i++)
+		vert_buff[i] = data->vert_array[i];
+	for (int i = 0; i < 8; i++)
+		vert_buff[i] = rotate_point_x(vert_buff[i], data->angle.x);
+	for (int i = 0; i < 8; i++)
+		vert_buff[i] = rotate_point_y(vert_buff[i], data->angle.y);
+	for (int i = 0; i < 8; i++)
+		vert_buff[i] = rotate_point_z(vert_buff[i], data->angle.z);
 	for (int i = 0; i < 8; i++)
 	{
-		pnt[i] = rotate_point_x(pnt[i], angle);
-		pnt[i] = rotate_point_y(pnt[i], angle);
-		pnt[i] = rotate_point_z(pnt[i], angle);
-		sc[i] = matrix_mul2D(pnt[i], proj_matrix);
-		sc[i].x *= 50;
-		sc[i].y *= 50;
+		sc[i] = matrix_mul2D(vert_buff[i], proj_matrix);
+		sc[i].x *= 250;
+		sc[i].y *= 250;
 		sc[i].x += WIN_WIDTH / 2;
 		sc[i].y += WIN_HEIGHT / 2;
 	}
-	for (int i = 0; i < 7; i++)
-		put_pixel_to_image(&data->img, sc[i].x, sc[i].y, 0x00FF0000);
+	//for (int i = 0; i < 7; i++)
+	//	printf("%f, %f\n", sc[i].x, sc[i].y);
 	draw_line(&data->img, sc[0], sc[1], 0x00FF0000);
 	draw_line(&data->img, sc[1], sc[2], 0x00FF0000);
 	draw_line(&data->img, sc[2], sc[3], 0x00FF0000);
@@ -66,6 +65,8 @@ int	handle_input(int keysym, t_data *data)
 {
 	if (keysym == XK_Escape)
 		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	if (keysym == XK_x)
+		printf("%f, %f, %f\n", data->angle.x, data->angle.y, data->angle.z);
 
 	return (0);
 }
@@ -80,8 +81,43 @@ int	main(void)
 	data.img.mlx_img = mlx_new_image(data.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.mlx_img, &data.img.bpp,
 			&data.img.line_len, &data.img.endian);
-	data.p = 0;
 
+	int	map_line_len;
+	int	map_line_count;
+	int	i;
+	char	*map_data = "012343210\n012343210\n012343210\n012343210\n012343210\n";
+	
+	i = 0;
+	map_line_len = 0;
+	map_line_count = 0;
+	while (map_data[map_line_len] != '\n')
+		map_line_len++;
+	while (map_data[i])
+	{
+		if (map_data[i] == '\n')
+			map_line_count++;
+		i++;
+	}
+	int	j = 0;
+	int	k = 0;
+	float	vert_spacing = 2 / map_line_len;
+	float	hor_spacing = 2 / map_line_count;
+	while (map_data[j])
+	{
+		
+	}
+	
+	/*data.vert_array = malloc(sizeof(t_vect3D) * 8);
+	data.vert_array[0] = (t_vect3D){-1, 1, 1};
+	data.vert_array[1] = (t_vect3D){1, 1, 1};
+	data.vert_array[2] = (t_vect3D){1, -1, 1};
+	data.vert_array[3] = (t_vect3D){-1, -1, 1};
+	data.vert_array[4] = (t_vect3D){-1, 1, -1};
+	data.vert_array[5] = (t_vect3D){1, 1, -1};
+	data.vert_array[6] = (t_vect3D){1, -1, -1};
+	data.vert_array[7] = (t_vect3D){-1, -1, -1};*/
+	
+	
 	mlx_loop_hook(data.mlx_ptr, &handle_no_event, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_input, &data);
 
