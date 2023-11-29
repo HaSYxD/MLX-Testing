@@ -12,6 +12,11 @@
 # define PI	3.13149265359
 # define WIN_WIDTH	1600
 # define WIN_HEIGHT	900
+# define SCALE	350
+
+# define ISO_X_ANGLE	0.785993
+# define ISO_Y_ANGLE	-0.615996
+# define ISO_Z_ANGLE	0.523997
 
 typedef struct	s_point
 {
@@ -41,8 +46,7 @@ typedef struct	s_data
 	void	*mlx_ptr;
 	void	*win_ptr;
 	t_img	img;
-	t_vect3D	*vert_array;
-	t_vect3D	angle;
+	t_map_data	map_data;
 }	t_data;
 
 #endif
