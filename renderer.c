@@ -99,9 +99,9 @@ t_vect2D	*from_3dto_2d(t_data *data)
 		vert_buff[i] = data->map_data.map_coords[i];
 		i++;
 	}
-	vert_buff = rotate_x(vert_buff, ISO_X_ANGLE, num_vert);
-	vert_buff = rotate_y(vert_buff, ISO_Y_ANGLE, num_vert);
-	vert_buff = rotate_z(vert_buff, ISO_Z_ANGLE, num_vert);
+	vert_buff = rotate_x(vert_buff, data->map_data.draw_angle.x, num_vert);
+	vert_buff = rotate_y(vert_buff, data->map_data.draw_angle.y, num_vert);
+	vert_buff = rotate_z(vert_buff, data->map_data.draw_angle.z, num_vert);
 	projected_pnt = project_ortho(vert_buff, num_vert);
 	free(vert_buff);
 	return (projected_pnt);

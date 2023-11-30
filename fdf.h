@@ -12,7 +12,7 @@
 # define PI	3.13149265359
 # define WIN_WIDTH	1600
 # define WIN_HEIGHT	900
-# define SCALE	350
+# define SCALE	14
 
 # define ISO_X_ANGLE	0.785993
 # define ISO_Y_ANGLE	-0.615996
@@ -37,6 +37,7 @@ typedef struct	s_img
 typedef struct s_map_data
 {
 	t_vect3D	*map_coords;
+	t_vect3D	draw_angle;
 	int	map_width;
 	int	map_depth;
 }	t_map_data;
@@ -47,6 +48,7 @@ typedef struct	s_data
 	void	*win_ptr;
 	t_img	img;
 	t_map_data	map_data;
+	int	first_draw;
 }	t_data;
 
 #endif
