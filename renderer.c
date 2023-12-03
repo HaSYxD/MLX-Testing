@@ -2,7 +2,7 @@
 #include "matrices.h"
 #include "renderer.h"
 
-t_vect3D	*rotate_x(t_vect3D *obj, float angle, int num_vert)
+t_vect3D	*rotate_x(t_data *data, float angle)
 {
 	t_matrix3D	rot_matrix_x;
 	int			i;
@@ -13,15 +13,15 @@ t_vect3D	*rotate_x(t_vect3D *obj, float angle, int num_vert)
 		(t_vect3D){0, cos(angle), -sin(angle)},
 		(t_vect3D){0, sin(angle), cos(angle)}
 	};
-	while (i < num_vert)
+	while (i < data->obj_dt.num_vert)
 	{
-		obj[i] = matrix_mul3D(obj[i], rot_matrix_x);
+		data->vert_buff[i] = matrix_mul3D(data->vert_buff[i], rot_matrix_x);
 		i++;
 	}
-	return (obj);
+	return (data->vert_buff);
 }
 
-t_vect3D	*rotate_y(t_vect3D *obj, float angle, int num_vert)
+t_vect3D	*rotate_y(t_data *data, float angle)
 {
 	t_matrix3D	rot_matrix_y;
 	int			i;
@@ -32,15 +32,15 @@ t_vect3D	*rotate_y(t_vect3D *obj, float angle, int num_vert)
 		(t_vect3D){0, 1, 0},
 		(t_vect3D){-sin(angle), 0, cos(angle)}
 	};
-	while (i < num_vert)
+	while (i < data->obj_dt.num_vert)
 	{
-		obj[i] = matrix_mul3D(obj[i], rot_matrix_y);
+		data->vert_buff[i] = matrix_mul3D(data->vert_buff[i], rot_matrix_y);
 		i++;
 	}
-	return (obj);
+	return (data->vert_buff);
 }
 
-t_vect3D	*rotate_z(t_vect3D *obj, float angle, int num_vert)
+t_vect3D	*rotate_z(t_data *data, float angle)
 {
 	t_matrix3D	rot_matrix_z;
 	int			i;
@@ -51,15 +51,15 @@ t_vect3D	*rotate_z(t_vect3D *obj, float angle, int num_vert)
 		(t_vect3D){sin(angle), cos(angle), 0},
 		(t_vect3D){0, 0, 1}
 	};
-	while (i < num_vert)
+	while (i < data->obj_dt.num_vert)
 	{
-		obj[i] = matrix_mul3D(obj[i], rot_matrix_z);
+		data->vert_buff[i] = matrix_mul3D(data->vert_buff[i], rot_matrix_z);
 		i++;
 	}
-	return (obj);
+	return (data->vert_buff);
 }
 
-t_vect2D	*project_ortho(t_vect3D	*vert_buff, int num_vert)
+t_vect2D	*project_ortho(t_data	*data)
 {
 	t_matrix3D	proj_matrix;
 	t_vect2D	*projected_pnt;
@@ -71,10 +71,10 @@ t_vect2D	*project_ortho(t_vect3D	*vert_buff, int num_vert)
 		(t_vect3D){0, 1, 0},
 		(t_vect3D){0, 0, 0}
 	};
-	projected_pnt = malloc(sizeof(t_vect2D) * num_vert);
-	while (i < num_vert)
+	projected_pnt = malloc(sizeof(t_vect2D) * data->obj_dt.num_vert);
+	while (i < data->obj_dt.num_vert)
 	{
-		projected_pnt[i] = matrix_mul2D(vert_buff[i], proj_matrix);
+		projected_pnt[i] = matrix_mul2D(data->vert_buff[i], proj_matrix);
 		projected_pnt[i].x *= SCALE;
 		projected_pnt[i].y *= SCALE;
 		projected_pnt[i].x += WIN_WIDTH / 2;
@@ -86,23 +86,18 @@ t_vect2D	*project_ortho(t_vect3D	*vert_buff, int num_vert)
 
 t_vect2D	*from_3dto_2d(t_data *data)
 {
-	t_vect3D	*vert_buff;
 	t_vect2D	*projected_pnt;
-	int			num_vert;
 	int			i;
 
 	i = 0;
-	num_vert = data->map_data.map_width * data->map_data.map_depth;
-	vert_buff = malloc(sizeof(t_vect3D) * num_vert);
-	while (i < num_vert)
+	while (i < data->obj_dt.num_vert)
 	{
-		vert_buff[i] = data->map_data.map_coords[i];
+		data->vert_buff[i] = data->obj_dt.vertex[i];
 		i++;
 	}
-	vert_buff = rotate_x(vert_buff, data->map_data.draw_angle.x, num_vert);
-	vert_buff = rotate_y(vert_buff, data->map_data.draw_angle.y, num_vert);
-	vert_buff = rotate_z(vert_buff, data->map_data.draw_angle.z, num_vert);
-	projected_pnt = project_ortho(vert_buff, num_vert);
-	free(vert_buff);
+	data->vert_buff = rotate_x(data, data->obj_dt.angle.x);
+	data->vert_buff = rotate_y(data, data->obj_dt.angle.y);
+	data->vert_buff = rotate_z(data, data->obj_dt.angle.z);
+	projected_pnt = project_ortho(data);
 	return (projected_pnt);
 }

@@ -14,12 +14,7 @@
 
 void	ft_putunsnbr(unsigned int nbr, int *i)
 {
-	if (nbr < 0)
-	{
-		write(1, "-", 1);
-		nbr *= -1;
-	}
-	if (nbr >= 0 && nbr <= 9)
+	if (nbr <= 9)
 	{
 		ft_putchar('0' + nbr, i);
 	}

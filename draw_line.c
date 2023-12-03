@@ -17,9 +17,9 @@ static void	first_case(t_img *img, t_vect2D p1, t_vect2D p2, int color)
 	int	dy;
 	
 	i = 0;
-	e = abs(p2.x - p1.x);
+	e = abs((int)p2.x - (int)p1.x);
 	dx = e;
-	dy = 2 * abs(p2.y - p1.y);
+	dy = 2 * abs((int)p2.y - (int)p1.y);
 	while (i <= dx)
 	{
 		put_pixel_to_image(img, p1.x, p1.y, color);
@@ -42,8 +42,8 @@ static void	second_case(t_img *img, t_vect2D p1, t_vect2D p2, int color)
 	int	dy;
 	
 	i = 0;
-	e = abs(p2.y - p1.y);
-	dx = 2 * abs(p2.x - p1.x);
+	e = abs((int)p2.y - (int)p1.y);
+	dx = 2 * abs((int)p2.x - (int)p1.x);
 	dy = e;
 	while (i <= dy)
 	{
@@ -69,8 +69,8 @@ void	put_pixel_to_image(t_img *img, int x, int y, int color)
 
 void	draw_line(t_img *img, t_vect2D p1, t_vect2D p2, int color)
 {
-	if (abs(p2.x - p1.x) > abs(p2.y - p1.y))
+	if (abs((int)p2.x - (int)p1.x) > abs((int)p2.y - (int)p1.y))
 		first_case(img, p1, p2, color);
-	else if (abs(p2.x - p1.x) <= abs(p2.y - p1.y))
+	else if (abs((int)p2.x - (int)p1.x) <= abs((int)p2.y - (int)p1.y))
 		second_case(img, p1, p2, color);
 }
