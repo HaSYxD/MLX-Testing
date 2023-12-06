@@ -13,18 +13,21 @@
 #include "fdf.h"
 #include "matrices.h"
 #include "renderer.h"
-#include "draw_line.h"
-#include "get_next_line.h"
+#include "draw.h"
 #include "file_handling.h"
-#include "utils.h"
 
 void	close_app(t_data *data)
 {
-	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
+	if (data->win_ptr != NULL)
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	if (data->img.mlx_img != NULL)
+		mlx_destroy_image(data->mlx_ptr, data->img.mlx_img);
 	mlx_destroy_display(data->mlx_ptr);
-	free(data->obj_dt.vertex);
-	free(data->vert_buff);
+	if (data->converted)
+	{
+		free(data->obj.vertex);
+		free(data->v_buff);
+	}
 	free(data->mlx_ptr);
 	exit(1);
 }
@@ -46,37 +49,24 @@ int	init_app(t_data *data)
 	return (0);
 }
 
-void	draw_background(t_data *data)
-{
-	for (int j = 0; j < WIN_HEIGHT; j++)
-		for (int i = WIN_WIDTH / 5; i < (WIN_WIDTH / 5) * 4; i++)
-			put_pixel_to_image(&data->img, i, j, 0x00000000);
-}
-
 int	handle_no_event(t_data *data)
 {
 	t_vect2D	*sc;
-	
-	data->obj_dt.angle.x += 0.001;
-	data->obj_dt.angle.y += 0.001;
-	data->obj_dt.angle.z += 0.001;
-	sc = from_3dto_2d(data);
-	draw_background(data);
-	for (int i = 0; i < data->obj_dt.num_vert - 1; i++)
+
+	if (data->tick >= 1000)
 	{
-		//put_pixel_to_image(&data->img, sc[i].x, sc[i].y, 0x00FF0000);
-		if (sc[i].x >= 0 &&  sc[i].y >= 0 && sc[i].x <= WIN_WIDTH
-			&& sc[i].y <= WIN_HEIGHT
-			&& (i % (data->obj_dt.map_width)) != (data->obj_dt.map_width - 1)
-			&& i + data->obj_dt.map_width < data->obj_dt.num_vert
-			&& sc[i + data->obj_dt.map_width].y != 0)
-		{
-			draw_line(&data->img, sc[i], sc[i + data->obj_dt.map_width], 0x00FF0000);
-			draw_line(&data->img, sc[i], sc[i + 1], 0x00FF0000);
-		}
+		//data->obj.angle.x += 0.005;
+		//data->obj.angle.y += 0.005;
+		//data->obj.angle.z += 0.005;
+		sc = from_3dto_2d(data);
+		draw_background(data);
+		draw_fdf_lines(data, sc);
+		mlx_put_image_to_window(data->mlx_ptr,
+			data->win_ptr, data->img.mlx_img, 0, 0);
+		free(sc);
+		data->tick = 0;
 	}
-	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.mlx_img, 0, 0);
-	free(sc);
+	data->tick++;
 	return (0);
 }
 
@@ -96,8 +86,9 @@ int	main(int argc, char *argv[])
 		return (MLX_ERROR);
 	if (check_user_input(argc, argv, &data) == -1)
 		close_app(&data);
-	data.obj_dt.angle = (t_vect3D){ISO_X_ANGLE, ISO_Y_ANGLE, ISO_Z_ANGLE};
-	data.vert_buff = malloc(sizeof(t_vect3D) * data.obj_dt.num_vert);
+	data.obj.angle = (t_vect3D){ISO_X_ANGLE, ISO_Y_ANGLE, ISO_Z_ANGLE};
+	data.v_buff = malloc(sizeof(t_vect3D) * data.obj.num_vert);
+	data.tick = 0;
 	if (data.converted)
 		mlx_loop_hook(data.mlx_ptr, &handle_no_event, &data);
 	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_input, &data);

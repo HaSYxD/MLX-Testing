@@ -66,7 +66,7 @@ int	ft_atoi(const char *str)
 	return (res);
 }
 
-int	countw(const char *s, char c)
+int	countw(const char *s)
 {
 	int	i;
 	int	count;
@@ -77,12 +77,12 @@ int	countw(const char *s, char c)
 	trigger = 0;
 	while (s[i])
 	{
-		if (s[i] != c && trigger == 0)
+		if (s[i] != ' ' && s[i] != '\n' && trigger == 0)
 		{
 			trigger = 1;
 			count++;
 		}
-		else if (s[i] == c)
+		else if (s[i] == ' ')
 			trigger = 0;
 		i++;
 	}
@@ -101,4 +101,10 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		i++;
 	}
 	return (0);
+}
+
+void	ft_putstr(const char *str)
+{
+	while(*str)
+		write(1, &*str++, 1);
 }

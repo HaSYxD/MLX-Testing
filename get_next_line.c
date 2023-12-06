@@ -92,17 +92,16 @@ char	*read_to_stash(int fd, char *stash)
 	return (stash);
 }
 
-char	*get_next_line(int fd)
+int	get_next_line(int fd, char **line)
 {
 	static char	*stash;
-	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	stash = read_to_stash(fd, stash);
 	if (!stash)
-		return (NULL);
-	line = extract_line(stash);
+		return (0);
+	*line = extract_line(stash);
 	stash = clean_stash(stash);
-	return (line);
+	return (ft_strlen(*line));
 }
