@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   renderer.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aliaudet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/07 14:54:05 by aliaudet          #+#    #+#             */
+/*   Updated: 2023/12/07 14:54:07 by aliaudet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include "matrices.h"
 #include "renderer.h"
@@ -15,7 +27,7 @@ t_vect3D	*rotate_x(t_data *data, float angle)
 	};
 	while (i < data->obj.num_vert)
 	{
-		data->v_buff[i] = matrix_mul3D(data->v_buff[i], rot_matrix_x);
+		data->v_buff[i] = matrix_mul3d(data->v_buff[i], rot_matrix_x);
 		i++;
 	}
 	return (data->v_buff);
@@ -34,7 +46,7 @@ t_vect3D	*rotate_y(t_data *data, float angle)
 	};
 	while (i < data->obj.num_vert)
 	{
-		data->v_buff[i] = matrix_mul3D(data->v_buff[i], rot_matrix_y);
+		data->v_buff[i] = matrix_mul3d(data->v_buff[i], rot_matrix_y);
 		i++;
 	}
 	return (data->v_buff);
@@ -53,7 +65,7 @@ t_vect3D	*rotate_z(t_data *data, float angle)
 	};
 	while (i < data->obj.num_vert)
 	{
-		data->v_buff[i] = matrix_mul3D(data->v_buff[i], rot_matrix_z);
+		data->v_buff[i] = matrix_mul3d(data->v_buff[i], rot_matrix_z);
 		i++;
 	}
 	return (data->v_buff);
@@ -74,7 +86,7 @@ t_vect2D	*project_ortho(t_data	*data)
 	projected_pnt = malloc(sizeof(t_vect2D) * data->obj.num_vert);
 	while (i < data->obj.num_vert)
 	{
-		projected_pnt[i] = matrix_mul2D(data->v_buff[i], proj_matrix);
+		projected_pnt[i] = matrix_mul2d(data->v_buff[i], proj_matrix);
 		projected_pnt[i].x *= SCALE;
 		projected_pnt[i].y *= SCALE;
 		projected_pnt[i].x += (WIN_WIDTH / 2);

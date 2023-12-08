@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "utils.h"
+#include "fdf.h"
 
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
@@ -39,31 +40,31 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 
 int	ft_atoi(const char *str)
 {
-	int	neg_count;
-	int	pos_count;
-	int	res;
+	t_count	c;
 
-	neg_count = 0;
-	pos_count = 0;
-	res = 0;
+	c = (t_count){0, 0, 0};
 	while (*str == ' ' || *str == '\t' || *str == '\r'
 		|| *str == '\n' || *str == '\v' || *str == '\f')
 		str++;
 	while (*str == '-' || *str == '+')
 	{
 		if (*str == '-')
-			neg_count++;
+			c.i++;
 		if (*str == '+')
-			pos_count++;
+			c.j++;
 		str++;
 	}
-	while (*str >= '0' && *str <= '9')
-		res = res * 10 + *str++ - '0';
-	if ((neg_count + pos_count) > 1)
+	while (*str >= '0' && *str <= '9' || *str == '.')
+	{
+		if (*str == '.')
+			str++;
+		c.k = c.k * 10 + *str++ - '0';
+	}
+	if ((c.i + c.j) > 1)
 		return (0);
-	if (neg_count == 1)
-		res = -res;
-	return (res);
+	if (c.i == 1)
+		c.k = -c.k;
+	return (c.k);
 }
 
 int	countw(const char *s)
@@ -105,6 +106,6 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 void	ft_putstr(const char *str)
 {
-	while(*str)
+	while (*str)
 		write(1, &*str++, 1);
 }

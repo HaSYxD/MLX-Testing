@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aliaudet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/07 14:47:38 by aliaudet          #+#    #+#             */
+/*   Updated: 2023/12/07 14:47:41 by aliaudet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 #include "draw.h"
 
@@ -10,7 +22,7 @@ void	draw_background(t_data *data)
 	{
 		while (c.i < WIN_WIDTH)
 		{
-			put_pixel_to_image(&data->img, c.i, c.j, (t_color){0, 0, 0});
+			put_pixel_to_image(&data->img, c.i, c.j, (t_color){153, 204, 255});
 			c.i++;
 		}
 		c.i = 0;

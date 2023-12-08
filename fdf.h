@@ -1,18 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fdf.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aliaudet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/07 14:49:06 by aliaudet          #+#    #+#             */
+/*   Updated: 2023/12/07 14:49:08 by aliaudet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FDF_H
 # define FDF_H
 
 # include <stdlib.h>
 # include <X11/keysym.h>
 # include <X11/X.h>
-# include <stdio.h>
 # include <math.h>
 # include "matrices.h"
 # include "mlx.h"
 
-# define PI	3.13149265359
+# ifndef SCALE
+#  define SCALE	200
+# endif
+
 # define WIN_WIDTH	1920
 # define WIN_HEIGHT	1080
-# define SCALE	550
 # define MLX_ERROR	-1
 
 # define ISO_X_ANGLE	0.785993
@@ -38,11 +51,12 @@ typedef struct s_img
 typedef struct s_object
 {
 	t_vect3D	*vertex;
-	t_vect2D	*index;
+	t_vect3D	*index;
 	t_vect3D	angle;
 	int			width;
 	int			depth;
 	int			num_vert;
+	int			num_ind;
 }	t_object;
 
 typedef struct s_data

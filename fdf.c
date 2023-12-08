@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
+
 #include "fdf.h"
 #include "matrices.h"
 #include "renderer.h"
@@ -52,6 +54,7 @@ int	init_app(t_data *data)
 int	handle_no_event(t_data *data)
 {
 	t_vect2D	*sc;
+	int	i = 0;
 
 	if (data->tick >= 1000)
 	{
@@ -60,7 +63,16 @@ int	handle_no_event(t_data *data)
 		//data->obj.angle.z += 0.005;
 		sc = from_3dto_2d(data);
 		draw_background(data);
-		draw_fdf_lines(data, sc);
+		//draw_fdf_lines(data, sc);
+		while (i < data->obj.num_vert)
+		{
+			//printf("%f, %f\n", sc[i].x, sc[i].y);
+			//put_pixel_to_image(&data->img, sc[i].x, sc[i].y, (t_color){255, 255, 255});
+			draw_line(&data->img, sc[(int)data->obj.index[i].x], sc[(int)data->obj.index[i].y], (t_color){102, 51, 0});
+			draw_line(&data->img, sc[(int)data->obj.index[i].y], sc[(int)data->obj.index[i].z], (t_color){102, 51, 0});
+			draw_line(&data->img, sc[(int)data->obj.index[i].z], sc[(int)data->obj.index[i].x], (t_color){102, 51, 0});
+			i++;
+		}
 		mlx_put_image_to_window(data->mlx_ptr,
 			data->win_ptr, data->img.mlx_img, 0, 0);
 		free(sc);

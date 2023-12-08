@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_handling.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aliaudet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/07 14:49:33 by aliaudet          #+#    #+#             */
+/*   Updated: 2023/12/07 14:49:35 by aliaudet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 #include "fdf.h"
 #include "get_next_line.h"
@@ -123,8 +135,8 @@ int	check_user_input(int argc, char *argv[], t_data *data)
 	}
 	if (ft_strnstr(argv[1], "fdf", ft_strlen(argv[1])))
 		return (handle_fdf(argv, data));
-	//else if (ft_strnstr(argv[1], "obj", ft_strlen(argv[1])))
-	//	handle_obj(argv, data);
+	else if (ft_strnstr(argv[1], "obj", ft_strlen(argv[1])))
+		return (handle_obj(argv, data));
 	else
 	{
 		ft_putstr("Please input the correcte file format (.fdf or .obj)\n");
