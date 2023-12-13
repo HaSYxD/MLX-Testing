@@ -51,18 +51,17 @@ typedef struct s_img
 typedef struct s_object
 {
 	t_vect3D	*vertex;
-	t_vect3D	*index;
 	t_vect3D	angle;
 	int			width;
 	int			depth;
 	int			num_vert;
-	int			num_ind;
 }	t_object;
 
 typedef struct s_data
 {
 	t_object	obj;
 	t_vect3D	*v_buff;
+	t_vect3D	cam_pos;
 	t_img		img;
 	void		*mlx_ptr;
 	void		*win_ptr;

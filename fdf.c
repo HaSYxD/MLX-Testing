@@ -54,25 +54,12 @@ int	init_app(t_data *data)
 int	handle_no_event(t_data *data)
 {
 	t_vect2D	*sc;
-	int	i = 0;
 
 	if (data->tick >= 1000)
 	{
-		//data->obj.angle.x += 0.005;
-		//data->obj.angle.y += 0.005;
-		//data->obj.angle.z += 0.005;
 		sc = from_3dto_2d(data);
 		draw_background(data);
-		//draw_fdf_lines(data, sc);
-		while (i < data->obj.num_vert)
-		{
-			//printf("%f, %f\n", sc[i].x, sc[i].y);
-			//put_pixel_to_image(&data->img, sc[i].x, sc[i].y, (t_color){255, 255, 255});
-			draw_line(&data->img, sc[(int)data->obj.index[i].x], sc[(int)data->obj.index[i].y], (t_color){102, 51, 0});
-			draw_line(&data->img, sc[(int)data->obj.index[i].y], sc[(int)data->obj.index[i].z], (t_color){102, 51, 0});
-			draw_line(&data->img, sc[(int)data->obj.index[i].z], sc[(int)data->obj.index[i].x], (t_color){102, 51, 0});
-			i++;
-		}
+		draw_fdf_lines(data, sc);
 		mlx_put_image_to_window(data->mlx_ptr,
 			data->win_ptr, data->img.mlx_img, 0, 0);
 		free(sc);
@@ -86,6 +73,26 @@ int	handle_input(int keysym, t_data *data)
 {
 	if (keysym == XK_Escape)
 		close_app(data);
+	if (keysym == XK_Up)
+		data->cam_pos.z += 5;
+	if (keysym == XK_Down)
+		data->cam_pos.z -= 5;
+	if (keysym == XK_w)
+		data->cam_pos.y += 2;
+	if (keysym == XK_s)
+		data->cam_pos.y -= 2;
+	if (keysym == XK_q)
+		data->obj.angle.x += 0.005;
+	if (keysym == XK_e)
+		data->obj.angle.x -= 0.005;
+	if (keysym == XK_a)
+		data->obj.angle.y += 0.005;
+	if (keysym == XK_d)
+		data->obj.angle.y -= 0.005;
+	if (keysym == XK_z)
+		data->obj.angle.z += 0.005;
+	if (keysym == XK_c)
+		data->obj.angle.z -= 0.005;
 	return (0);
 }
 
@@ -99,6 +106,7 @@ int	main(int argc, char *argv[])
 	if (check_user_input(argc, argv, &data) == -1)
 		close_app(&data);
 	data.obj.angle = (t_vect3D){ISO_X_ANGLE, ISO_Y_ANGLE, ISO_Z_ANGLE};
+	data.cam_pos = (t_vect3D){WIN_WIDTH / 2, WIN_HEIGHT / 2, SCALE};
 	data.v_buff = malloc(sizeof(t_vect3D) * data.obj.num_vert);
 	data.tick = 0;
 	if (data.converted)

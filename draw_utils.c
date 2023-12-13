@@ -22,7 +22,7 @@ void	draw_background(t_data *data)
 	{
 		while (c.i < WIN_WIDTH)
 		{
-			put_pixel_to_image(&data->img, c.i, c.j, (t_color){153, 204, 255});
+			put_pixel_to_image(data, c.i, c.j, (t_color){0, 0, 0});
 			c.i++;
 		}
 		c.i = 0;
@@ -30,19 +30,32 @@ void	draw_background(t_data *data)
 	}
 }
 
+t_color	get_color(t_data *data, int vc)
+{
+	t_color	color;
+	
+	if ((data->obj.vertex[vc].y + 2) >= 0)
+		color = (t_color){255 * (data->obj.vertex[vc].y + 2), 0, 0};
+	else
+		color = (t_color){255 * 0, 0, 0};
+	return (color);
+}
+
 void	draw_fdf_lines(t_data *data, t_vect2D *sc)
 {
 	t_count	c;
+	t_color color;
 
 	c = (t_count){0, 0, 0};
 	while (c.k < data->obj.num_vert)
 	{
+		color = get_color(data, c.k);
 		if (c.i > 0)
-			draw_line(&data->img, sc[c.k],
-				sc[c.k - 1], (t_color){255, 255, 255});
+			draw_line(data, sc[c.k],
+				sc[c.k - 1], color);
 		if (c.j > 0)
-			draw_line(&data->img, sc[c.k],
-				sc[c.k - data->obj.width], (t_color){255, 255, 255});
+			draw_line(data, sc[c.k],
+				sc[c.k - data->obj.width], color);
 		c.i++;
 		if (c.i == data->obj.width)
 		{

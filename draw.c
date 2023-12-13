@@ -21,7 +21,7 @@ static int	check_incr(int n1, int n2)
 	return (1);
 }
 
-static void	first_case(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
+static void	first_case(t_data *data, t_vect2D p1, t_vect2D p2, t_color color)
 {
 	int	e;
 	int	i;
@@ -34,7 +34,7 @@ static void	first_case(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
 	dy = 2 * abs((int)p2.y - (int)p1.y);
 	while (i <= dx)
 	{
-		put_pixel_to_image(img, p1.x, p1.y, color);
+		put_pixel_to_image(data, p1.x, p1.y, color);
 		i++;
 		p1.x += check_incr(p1.x, p2.x);
 		e -= dy;
@@ -46,7 +46,7 @@ static void	first_case(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
 	}
 }
 
-static void	second_case(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
+static void	second_case(t_data *data, t_vect2D p1, t_vect2D p2, t_color color)
 {
 	int	e;
 	int	i;
@@ -59,7 +59,7 @@ static void	second_case(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
 	dy = e;
 	while (i <= dy)
 	{
-		put_pixel_to_image(img, p1.x, p1.y, color);
+		put_pixel_to_image(data, p1.x, p1.y, color);
 		i++;
 		p1.y += check_incr(p1.y, p2.y);
 		e -= dx;
@@ -71,23 +71,23 @@ static void	second_case(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
 	}
 }
 
-void	put_pixel_to_image(t_img *img, int x, int y, t_color color)
+void	put_pixel_to_image(t_data *data, int x, int y, t_color color)
 {
 	char	*pixel;
 	int		f_col;
 
 	if (x >= 0 && y >= 0 && x <= WIN_WIDTH && y <= WIN_HEIGHT)
 	{
-		pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
+		pixel = data->img.addr + (y * data->img.line_len + x * (data->img.bpp / 8));
 		f_col = color.r << 16 | color.g << 8 | color.b;
 		*(int *)pixel = f_col;
 	}
 }
 
-void	draw_line(t_img *img, t_vect2D p1, t_vect2D p2, t_color color)
+void	draw_line(t_data *data, t_vect2D p1, t_vect2D p2, t_color color)
 {
 	if (abs((int)p2.x - (int)p1.x) > abs((int)p2.y - (int)p1.y))
-		first_case(img, p1, p2, color);
+		first_case(data, p1, p2, color);
 	else if (abs((int)p2.x - (int)p1.x) <= abs((int)p2.y - (int)p1.y))
-		second_case(img, p1, p2, color);
+		second_case(data, p1, p2, color);
 }

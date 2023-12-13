@@ -54,7 +54,7 @@ int	ft_atoi(const char *str)
 			c.j++;
 		str++;
 	}
-	while (*str >= '0' && *str <= '9' || *str == '.')
+	while ((*str >= '0' && *str <= '9') || *str == '.')
 	{
 		if (*str == '.')
 			str++;

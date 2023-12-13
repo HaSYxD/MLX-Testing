@@ -13,8 +13,6 @@
 #ifndef FILE_HANDLING_H
 # define FILE_HANDLING_H
 
-void	normalise_data(t_data *data);
-int		handle_obj(char *argv[], t_data *data);
 int		check_user_input(int argc, char *argv[], t_data *data);
 
 #endif

@@ -87,10 +87,10 @@ t_vect2D	*project_ortho(t_data	*data)
 	while (i < data->obj.num_vert)
 	{
 		projected_pnt[i] = matrix_mul2d(data->v_buff[i], proj_matrix);
-		projected_pnt[i].x *= SCALE;
-		projected_pnt[i].y *= SCALE;
+		projected_pnt[i].x *= data->cam_pos.z;
+		projected_pnt[i].y *= data->cam_pos.z;
 		projected_pnt[i].x += (WIN_WIDTH / 2);
-		projected_pnt[i].y += (WIN_HEIGHT / 2);
+		projected_pnt[i].y += data->cam_pos.y;
 		i++;
 	}
 	return (projected_pnt);
